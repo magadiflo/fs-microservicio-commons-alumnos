@@ -7,12 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "alumnos")
@@ -24,7 +27,7 @@ public class Alumno {
 
 	@NotBlank
 	private String nombre;
-	
+
 	@NotBlank
 	private String apellido;
 
@@ -37,9 +40,22 @@ public class Alumno {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createAt;
 
+	@Lob // Permite persistir un objeto largo, es tipo de contenido object.
+	@JsonIgnore
+	private byte[] foto;
+
 	@PrePersist
 	public void prePersist() {
 		this.createAt = new Date();
+	}
+
+	// getFotoHashCode(), lo iniciamos con get, para que
+	// se serialice con el json, es decir se genere como un atributo
+	public Integer getFotoHashCode() {
+		// Todos los objetos de java tienen un hashCode (un identificador)
+		// que lo hace único, que le permite comparar en el método equals
+		// (las instancias)
+		return (this.foto != null) ? this.foto.hashCode() : null;
 	}
 
 	public Long getId() {
@@ -80,6 +96,14 @@ public class Alumno {
 
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
+	}
+
+	public byte[] getFoto() {
+		return foto;
+	}
+
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
 	}
 
 	@Override
