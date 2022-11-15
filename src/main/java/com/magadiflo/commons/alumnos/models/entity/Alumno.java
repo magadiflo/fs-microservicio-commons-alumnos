@@ -41,7 +41,7 @@ public class Alumno {
 	private Date createAt;
 
 	@Lob // Permite persistir un objeto largo, es tipo de contenido object.
-	@JsonIgnore
+	@JsonIgnore // No lo mostraremos en el Json, ya que es un binario muy extenso, en su reemplazo creamos el método getFotoHashCode(), que mostrará el código hash de la foto en el JSON
 	private byte[] foto;
 
 	@PrePersist
